@@ -17,5 +17,9 @@ public interface IRSAChiper {
 
     BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key);
 
+    String encryptMessage(String plaintext, PublicKey key);
+
+    String decryptMessage(String chipertext, PrivateKey key);
+
 
 }

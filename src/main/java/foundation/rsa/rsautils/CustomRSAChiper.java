@@ -6,8 +6,7 @@ import foundation.rsa.rsautils.PrivateKey;
 import foundation.rsa.rsautils.PublicKey;
 
 import java.math.BigInteger;
-import java.util.Date;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by gioacchino on 16/05/17.
@@ -105,6 +104,36 @@ public class CustomRSAChiper implements IRSAChiper {
     public BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key) {
 
         return chipertex.modPow(key.getD(), key.getN());
+    }
+
+    public String encryptMessage(String plaintext, PublicKey key) {
+
+        int blocksize = 4;
+        byte[] msg_bytes = plaintext.getBytes();
+
+        List<String> tmp = new ArrayList<>();
+
+        //short tmpindex;
+        BigInteger tmp_integer;
+
+        for (short i = 0; i < msg_bytes.length; i += (blocksize+1)) {
+
+            tmp_integer = new BigInteger(Arrays.copyOfRange(msg_bytes, i, i+blocksize));
+
+            tmp.add(this.encryptBlock(tmp_integer, key).toString(2));
+
+        }
+
+
+
+        return tmp.toString();
+    }
+
+    public String decryptMessage(String chipertext, PrivateKey key) {
+
+
+
+        return null;
     }
 
 }

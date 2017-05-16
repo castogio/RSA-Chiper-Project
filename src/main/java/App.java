@@ -16,8 +16,11 @@ public class App {
 
         CustomRSAChiper c = new CustomRSAChiper();
 
-        KeyBundle kb = c.getKeys(1024, 1024);
+        KeyBundle kb = c.getKeys(16, 17);
 
+        System.out.println(c.encryptMessage(msg, kb.getPublickey()));
+
+        /*
         System.out.println("Numero bit chiave: " + kb.getPublickey().getE().bitLength());
 
         System.out.println("Messaggio: " + msg );
@@ -49,6 +52,7 @@ public class App {
         String str = new String(decriptato.toByteArray());
 
         System.out.println(str);
+        */
 
 
 
