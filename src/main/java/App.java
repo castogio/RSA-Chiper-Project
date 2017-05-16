@@ -1,4 +1,4 @@
-import foundation.rsa.CustomRSAChiper;
+import foundation.rsa.rsautils.CustomRSAChiper;
 
 /**
  * Created by gioacchino on 16/05/17.
@@ -10,7 +10,7 @@ public class App {
 
         CustomRSAChiper c = new CustomRSAChiper();
 
-        c.getKeys(5);
+        c.getKeys(5, 3);
 
 
 

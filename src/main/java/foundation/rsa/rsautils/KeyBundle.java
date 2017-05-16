@@ -5,19 +5,22 @@ package foundation.rsa.rsautils;
  */
 public class KeyBundle {
 
-    private BinaryKey publickey;
-    private BinaryKey privatekey;
+    private PublicKey publickey;
+    private PrivateKey privatekey;
 
-    public KeyBundle() {
-    }
-
-    public BinaryKey getPublickey() {
+    public PublicKey getPublickey() {
         return publickey;
     }
 
-    public BinaryKey getPrivatekey() {
+    void setPublickey(PublicKey publickey) {
+        this.publickey = publickey;
+    }
+
+    public PrivateKey getPrivatekey() {
         return privatekey;
     }
 
-
+    void setPrivatekey(PrivateKey privatekey) {
+        this.privatekey = privatekey;
+    }
 }

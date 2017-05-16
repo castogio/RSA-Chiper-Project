@@ -9,8 +9,7 @@ import java.math.BigInteger;
  */
 public interface IRSAChiper {
 
-    KeyBundle getKeys(int factorlength);
+    KeyBundle getKeys(int pfactorlength, int qfactorlength);
 
-    // BigInteger encrypt(BigInteger )
 
 }
