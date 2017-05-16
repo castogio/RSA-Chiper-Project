@@ -12,6 +12,7 @@ public class PrivateKey {
     private BigInteger dvalue;
     private BigInteger pvalue;
     private BigInteger qvalue;
+    private BigInteger nvalue;
 
     public BigInteger getD() {
         return dvalue;
@@ -35,5 +36,13 @@ public class PrivateKey {
 
     void setQ(BigInteger qvalue) {
         this.qvalue = qvalue;
+    }
+
+    public BigInteger getN() {
+        return nvalue;
+    }
+
+    public void setN(BigInteger nvalue) {
+        this.nvalue = nvalue;
     }
 }

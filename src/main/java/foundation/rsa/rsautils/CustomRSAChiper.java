@@ -85,6 +85,7 @@ public class CustomRSAChiper implements IRSAChiper {
         privateKey.setQ(q);
         privateKey.setD(d);
         privateKey.setP(p);
+        privateKey.setN(nproduct);
 
         publicKey.setN(nproduct);
         publicKey.setE(e);
@@ -95,4 +96,15 @@ public class CustomRSAChiper implements IRSAChiper {
 
         return kb;
     }
+
+    public BigInteger encryptBlock(BigInteger plainmessage, PublicKey key) {
+
+        return plainmessage.modPow(key.getE(), key.getN());
+    }
+
+    public BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key) {
+
+        return chipertex.modPow(key.getD(), key.getN());
+    }
+
 }

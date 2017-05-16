@@ -1,6 +1,8 @@
 package foundation.rsa;
 
 import foundation.rsa.rsautils.KeyBundle;
+import foundation.rsa.rsautils.PrivateKey;
+import foundation.rsa.rsautils.PublicKey;
 
 import java.math.BigInteger;
 
@@ -10,6 +12,10 @@ import java.math.BigInteger;
 public interface IRSAChiper {
 
     KeyBundle getKeys(int pfactorlength, int qfactorlength);
+
+    BigInteger encryptBlock(BigInteger plainmessage, PublicKey key);
+
+    BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key);
 
 
 }
