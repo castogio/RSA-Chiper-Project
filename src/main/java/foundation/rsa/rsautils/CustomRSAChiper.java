@@ -52,10 +52,15 @@ public class CustomRSAChiper implements IRSAChiper {
 
         // privateKey.setP(p);
 
+        //System.out.println(p.bitLength());
+        //System.out.println(q.bitLength());
+
 
         nproduct = p.multiply(q);
+        //System.out.println(nproduct.bitLength());
         phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
+        //System.out.println(phi.bitLength());
 
         /*
         System.out.println("q: " + q);
