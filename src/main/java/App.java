@@ -65,7 +65,7 @@ public class App {
         // test criptazione messaggio des
 
 
-        CustomRSAChiper c = new CustomRSAChiper();
+        CustomRSAChiper c = CustomRSAChiper.getInstance();
 
         KeyBundle kb = c.getKeys(60, 30);
 

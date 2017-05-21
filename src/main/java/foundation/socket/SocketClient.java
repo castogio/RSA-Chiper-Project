@@ -34,7 +34,7 @@ public class SocketClient {
         }
     }
 
-    private void dismissClient() throws IOException {
+    public void dismissClient() throws IOException {
         if (this.socket != null)
             this.socket.close();
         if (this.dataOutputStream != null)
@@ -87,5 +87,16 @@ public class SocketClient {
 
     public void setDataOutputStream(DataOutputStream dataOutputStream) {
         this.dataOutputStream = dataOutputStream;
+    }
+
+    public void sendMessage(String inputline) throws IOException {
+
+        this.dataOutputStream.writeUTF(inputline);
+        this.dataOutputStream.flush();
+    }
+
+    public String receiveMessage() throws IOException {
+
+        return this.dataInputStream.readUTF();
     }
 }

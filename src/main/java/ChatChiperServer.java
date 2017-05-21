@@ -58,7 +58,7 @@ public class ChatChiperServer {
         try {
 
             ss.init();
-            startChatLoop(ss, rsakeybundle);
+            startChatLoop(ss, rsakeybundle); // TODO USARE LE CHIAVI
             ss.dismissServer();
 
         } catch (IOException e) {
