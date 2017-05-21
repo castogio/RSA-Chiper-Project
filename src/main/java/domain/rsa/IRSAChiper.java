@@ -1,8 +1,8 @@
-package foundation.rsa;
+package domain.rsa;
 
-import foundation.rsa.rsautils.KeyBundle;
-import foundation.rsa.rsautils.PrivateKey;
-import foundation.rsa.rsautils.PublicKey;
+import domain.rsa.projectcustomrsa.utils.KeyBundle;
+import domain.rsa.projectcustomrsa.utils.PrivateKey;
+import domain.rsa.projectcustomrsa.utils.PublicKey;
 
 import java.math.BigInteger;
 
@@ -17,9 +17,7 @@ public interface IRSAChiper {
 
     BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key);
 
-    String encryptMessage(String plaintext, PublicKey key);
-
-    String decryptMessage(String chipertext, PrivateKey key);
+    KeyBundle attackRSA(PublicKey publicKey);
 
 
 }

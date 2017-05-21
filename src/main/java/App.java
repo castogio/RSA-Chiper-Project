@@ -1,10 +1,10 @@
-import foundation.rsa.rsautils.CustomRSAChiper;
-import foundation.rsa.rsautils.KeyBundle;
+import domain.rsa.projectcustomrsa.CustomRSAChiper;
+import domain.rsa.projectcustomrsa.utils.KeyBundle;
 
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
@@ -14,12 +14,11 @@ import java.util.Base64;
  */
 public class App {
 
-    public static void main(String[] args) throws NoSuchAlgorithmException {
+    public static void main(String[] args) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
 
 
         // generazione chiave DES
         KeyGenerator kg = KeyGenerator.getInstance("DES");
-
         SecretKey key = kg.generateKey();
         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
 
@@ -36,42 +35,54 @@ public class App {
 
         // generazione chiave des
 
+        // test criptazione messaggio des
 
-        String msg = "qw";
+        Cipher cipher = Cipher.getInstance("DES");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+
+
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+
+        //sensitive information
+        byte[] text = "No body can see me".getBytes();
+
+        System.out.println("Text [Byte Format] : " + Arrays.toString(text));
+        System.out.println("Text : " + new String(text));
+
+        // Encrypt the text
+        byte[] textEncrypted = cipher.doFinal(text);
+
+        System.out.println("Text Encryted : " + Arrays.toString(textEncrypted));
+
+        // Initialize the same cipher for decryption
+        cipher.init(Cipher.DECRYPT_MODE, key);
+
+        // Decrypt the text
+        byte[] textDecrypted = cipher.doFinal(textEncrypted);
+
+        System.out.println("Text Decryted : " + new String(textDecrypted));
+
+        // test criptazione messaggio des
 
 
         CustomRSAChiper c = new CustomRSAChiper();
 
-        KeyBundle kb = c.getKeys(23, 7);
-
-        //System.out.println(c.encryptMessage(msg, kb.getPublickey()));
+        KeyBundle kb = c.getKeys(60, 30);
 
         System.out.println("N:" + kb.getPublickey().getN().toString(10));
 
 
         System.out.println("Numero bit chiave: " + kb.getPublickey().getE().bitLength());
 
-        System.out.println("Messaggio: " + msg );
 
-        byte[] msg_byte = msg.getBytes();
-
-        System.out.println("Messaggio bytes: " + Arrays.toString(msg_byte) );
-
-        //messageint = new BigInteger(msg_byte);
-
-
-        //System.out.println(messageint.toString(2));
-
-
-        //BigInteger criptato = c.encryptBlock(messageint, kb.getPublickey() );
-        BigInteger criptato = c.encryptBlock(messageint, kb.getPublickey() );
+        BigInteger deschiavecriptata = c.encryptBlock(messageint, kb.getPublickey() );
 
         System.out.println("Testo chiaro: " +  messageint.toString(2));
 
-        System.out.println("Testo criptato: " +  criptato.toString(2));
+        System.out.println("Testo deschiave criptata: " +  deschiavecriptata.toString(2));
 
 
-        BigInteger decriptato = c.dencryptBlock(criptato, kb.getPrivatekey());
+        BigInteger decriptato = c.dencryptBlock(deschiavecriptata, kb.getPrivatekey());
 
         //System.out.println(decriptato.toString(2));
 
@@ -79,7 +90,6 @@ public class App {
         System.out.println("Chiave pubblica N: " + kb.getPublickey().getN().toString(2) );
 
 
-        //String str = new String(decriptato.toByteArray());
 
         System.out.println("Testo decriptato: " +  decriptato.toString(2));
 
