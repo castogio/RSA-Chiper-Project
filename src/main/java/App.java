@@ -82,7 +82,7 @@ public class App {
         System.out.println("Testo deschiave criptata: " +  deschiavecriptata.toString(2));
 
 
-        BigInteger decriptato = c.dencryptBlock(deschiavecriptata, kb.getPrivatekey());
+        BigInteger decriptato = c.decryptBlock(deschiavecriptata, kb.getPrivatekey());
 
         //System.out.println(decriptato.toString(2));
 

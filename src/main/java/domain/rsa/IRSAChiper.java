@@ -15,7 +15,7 @@ public interface IRSAChiper {
 
     BigInteger encryptBlock(BigInteger plainmessage, PublicKey key);
 
-    BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key);
+    BigInteger decryptBlock(BigInteger chipertex, PrivateKey key);
 
     KeyBundle attackRSA(PublicKey publicKey);
 

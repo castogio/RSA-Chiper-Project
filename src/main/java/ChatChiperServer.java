@@ -3,7 +3,9 @@ import domain.rsa.projectcustomrsa.utils.KeyBundle;
 import foundation.socket.SocketServer;
 import org.apache.log4j.BasicConfigurator;
 
+import javax.crypto.SecretKey;
 import java.io.*;
+import java.math.BigInteger;
 
 /**
  * Created by gioacchino on 20/05/17.
@@ -21,38 +23,6 @@ public class ChatChiperServer {
 
         // creazione delle chiavi crittografiche RSA
         KeyBundle rsakeybundle = generateRSAKeys();
-
-
-
-        /*
-        KeyGenerator keyGenerator;
-        SecretKey deskey;
-        CustomRSAChiper chiper;
-        KeyBundle rsakeybundle;
-        BigInteger deskeyencrypted;
-
-        try {
-            keyGenerator = KeyGenerator.getInstance("DES");
-            deskey = keyGenerator.generateKey();
-            chiper = new CustomRSAChiper();
-            rsakeybundle = chiper.getKeys(60, 30);
-
-            deskeyencrypted = chiper.encryptBlock(new BigInteger(deskey.getEncoded()), rsakeybundle.getPublickey());
-            System.out.println("Testo chiaro: " +  new BigInteger(deskey.getEncoded()).toString(2));
-            System.out.println("Testo des chiave criptata: " +  deskeyencrypted.toString(2));
-            BigInteger decriptato = chiper.dencryptBlock(deskeyencrypted, rsakeybundle.getPrivatekey());
-            System.out.println("Testo decriptato: " +  decriptato.toString(2));
-
-            PrintWriter writer = new PrintWriter("", "UTF-8");
-            writer.println("The first line");
-            writer.println("The second line");
-            writer.close();
-
-        } catch (NoSuchAlgorithmException | FileNotFoundException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        */
-
 
         // avvio dell'ascolto
         try {
@@ -95,14 +65,34 @@ public class ChatChiperServer {
         String incomingmessage = "";
         boolean endconversation = false;
         String outgoingmessage = "";
+        SecretKey deskey = null;
+
 
         do {
 
             incomingmessage = ss.receiveMessage();
 
-            if (incomingmessage.equals("/end"))
+
+            if (incomingmessage.substring(0,3).equals("KEY")) {
+
+                BigInteger key = null;
+                CustomRSAChiper rsaChiper = CustomRSAChiper.getInstance();
+                System.out.println(incomingmessage.substring(0,3));
+                ss.sendMessage("KEY RECEIVED");
+
+                // Decripta la chiave ricevuta con RSA
+                key = new BigInteger(incomingmessage.substring(5,incomingmessage.length()), 2);
+                key = rsaChiper.decryptBlock(key, keyBundle.getPrivatekey());
+
+
+
+
+
+
+            }
+            else if (incomingmessage.equals("/end"))
                 endconversation = true;
-            else {
+            else{
                 // TODO gestici logica
                 System.out.println("Peer>" + incomingmessage);
                 System.out.print("Me>");

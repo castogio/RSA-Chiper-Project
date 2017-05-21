@@ -1,5 +1,7 @@
 package foundation.socket;
 
+import org.apache.log4j.Logger;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -7,6 +9,8 @@ import java.net.Socket;
  * Created by gioacchino on 20/05/17.
  */
 public class SocketClient {
+
+    final static Logger logger = Logger.getLogger(SocketClient.class);
 
     private String hostaddress = "";
     private int serviceport = 0;
@@ -27,6 +31,7 @@ public class SocketClient {
 
         try {
             this.socket = new Socket(this.hostaddress, this.serviceport);
+            logger.info("Client comunica con " + this.hostaddress + ":" + this.serviceport);
             this.startClient();
 
         } catch (IOException e) {
@@ -41,12 +46,14 @@ public class SocketClient {
             this.dataOutputStream.close();
         if (this.consoleReader != null)
             this.consoleReader.close();
+        logger.info("Esecuzione del client terminata correttamente");
     }
 
     private void startClient() throws IOException {
         this.consoleReader = new BufferedReader(new InputStreamReader(System.in));
         this.dataOutputStream = new DataOutputStream(this.socket.getOutputStream());
         this.dataInputStream = new DataInputStream(new BufferedInputStream(this.socket.getInputStream()));
+        logger.info("Client pronto per la comunicazione");
     }
 
     public String getHostaddress() {

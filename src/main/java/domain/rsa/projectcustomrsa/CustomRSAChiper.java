@@ -99,7 +99,7 @@ public class CustomRSAChiper implements IRSAChiper {
     }
 
     @Override
-    public BigInteger dencryptBlock(BigInteger chipertex, PrivateKey key) {
+    public BigInteger decryptBlock(BigInteger chipertex, PrivateKey key) {
 
         return chipertex.modPow(key.getD(), key.getN());
     }
