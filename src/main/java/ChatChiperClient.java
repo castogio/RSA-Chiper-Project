@@ -106,8 +106,7 @@ public class ChatChiperClient {
         String outgoingmessage = "";
         String incomingmessage = "";
 
-        Cipher cipher = Cipher.getInstance("DES");;
-        cipher.init(Cipher.ENCRYPT_MODE, deskey);
+        Cipher chiper = Cipher.getInstance("DES");;
         byte[] textEncrypted; // conterrà il testo criptato
 
 
@@ -124,14 +123,19 @@ public class ChatChiperClient {
             System.out.print("Me>");
             outgoingmessage = socketClient.getConsoleReader().readLine();
 
+            chiper.init(Cipher.ENCRYPT_MODE, deskey);
+            outgoingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(outgoingmessage)));
 
-            textEncrypted = cipher.doFinal(outgoingmessage.getBytes());
+            //textEncrypted = cipher.doFinal(outgoingmessage.getBytes());
 
-            socketClient.sendMessage(new String(textEncrypted, StandardCharsets.UTF_8));
+            socketClient.sendMessage(outgoingmessage);
 
             incomingmessage = socketClient.receiveMessage();
 
-            // todo decriptare con des
+            chiper.init(Cipher.DECRYPT_MODE, deskey);
+            incomingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(incomingmessage)));
+
+            //incomingmessage = new String(chiper.doFinal(incomingmessage.getBytes()));
 
             System.out.println("Server>" + incomingmessage);
 
