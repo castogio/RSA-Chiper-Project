@@ -94,14 +94,25 @@ public class ChatChiperServer {
                 BigInteger key = null;
                 CustomRSAChiper rsaChiper = CustomRSAChiper.getInstance();
 
+
+
                 // Decripta la chiave ricevuta con RSA
+                System.out.println(incomingmessage.substring(4,incomingmessage.length()));
                 key = new BigInteger(incomingmessage.substring(4,incomingmessage.length()), 2);
+
+                System.out.println("DES enc: " + key.toString(2));
+
                 key = rsaChiper.decryptBlock(key, keyBundle.getPrivatekey());
 
-                System.out.println(Arrays.toString(key.toByteArray()));
+                System.out.println("DES: " + Arrays.toString(key.toByteArray()));
+
+
+
+                //System.out.println(Arrays.toString(key.toByteArray()));
 
                 deskey = new SecretKeySpec(key.toByteArray(), 0, key.toByteArray().length, "DES");
-                System.out.println(Arrays.toString(deskey.getEncoded()));
+
+                System.out.println("DES parsed: " + Arrays.toString(deskey.getEncoded()));
 
                 ss.sendMessage("KEY RECEIVED");
 
@@ -111,7 +122,9 @@ public class ChatChiperServer {
             else{
                 // decripta messaggio con DES
                 chiper.init(Cipher.DECRYPT_MODE, deskey);
-                incomingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(incomingmessage)));
+                System.out.println("Incoming: " + Arrays.toString(incomingmessage.getBytes()));
+                incomingmessage = new String(chiper.doFinal(incomingmessage.getBytes()));
+                //incomingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(incomingmessage)));
 
                 // incomingmessage = new String(chiper.doFinal(incomingmessage.getBytes()));
 
@@ -124,8 +137,8 @@ public class ChatChiperServer {
 
                 // cript
                 chiper.init(Cipher.ENCRYPT_MODE, deskey);
-                //outgoingmessage = new String(chiper.doFinal(outgoingmessage.getBytes()));
-                outgoingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(outgoingmessage)));
+                outgoingmessage = new String(chiper.doFinal(outgoingmessage.getBytes()));
+                //outgoingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(outgoingmessage)));
 
                 ss.sendMessage(outgoingmessage);
 

@@ -51,12 +51,12 @@ public class ChatChiperClient {
 
     private static SecretKey generateDESKey() {
 
-        final String DES_ID = "DES";
+        // final String DES_ID = "DES";
 
         KeyGenerator kg;
         SecretKey key = null;
         try {
-            kg = KeyGenerator.getInstance(DES_ID);
+            kg = KeyGenerator.getInstance("DES");
             key = kg.generateKey();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -110,10 +110,14 @@ public class ChatChiperClient {
         byte[] textEncrypted; // conterrà il testo criptato
 
 
+
         String encrypteddes = encryptDESKey(keyBundle, deskey);
 
         // invia chiave criptata (con handshaking)
+        System.out.println("DES criptato con rsa: " + encrypteddes);
         socketClient.sendMessage("KEY " + encrypteddes);
+
+        // mettiti in ascolto di un ok del server
         incomingmessage = socketClient.receiveMessage();
         System.out.println("Server>" + incomingmessage);
 
@@ -122,9 +126,22 @@ public class ChatChiperClient {
 
             System.out.print("Me>");
             outgoingmessage = socketClient.getConsoleReader().readLine();
+            System.out.println("Outgoing 1: " + Arrays.toString(outgoingmessage.getBytes()));
 
             chiper.init(Cipher.ENCRYPT_MODE, deskey);
-            outgoingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(outgoingmessage)));
+            //outgoingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(outgoingmessage)));
+            outgoingmessage = new String(chiper.doFinal(outgoingmessage.getBytes()));
+
+            System.out.println("Outgoing 2: " + Arrays.toString(outgoingmessage.getBytes()));
+
+            // todo rimuovere
+            chiper.init(Cipher.DECRYPT_MODE, deskey);
+            outgoingmessage = new String(chiper.doFinal(outgoingmessage.getBytes()));
+            System.out.println("Outgoing 3: " + Arrays.toString(outgoingmessage.getBytes()));
+
+
+
+            System.out.println("Outgoing: " + Arrays.toString(outgoingmessage.getBytes()));
 
             //textEncrypted = cipher.doFinal(outgoingmessage.getBytes());
 
@@ -133,7 +150,9 @@ public class ChatChiperClient {
             incomingmessage = socketClient.receiveMessage();
 
             chiper.init(Cipher.DECRYPT_MODE, deskey);
-            incomingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(incomingmessage)));
+            incomingmessage = new String(chiper.doFinal(incomingmessage.getBytes()));
+
+            //incomingmessage = new String( chiper.doFinal(Base64.getDecoder().decode(incomingmessage)));
 
             //incomingmessage = new String(chiper.doFinal(incomingmessage.getBytes()));
 
@@ -147,7 +166,9 @@ public class ChatChiperClient {
     private static String encryptDESKey(KeyBundle key, SecretKey deskey) {
 
         byte[] data = deskey.getEncoded();
+        System.out.println("DES normal: " + Arrays.toString(data));
         BigInteger messageint = new BigInteger(deskey.getEncoded());
+        //System.out.println("E: " + key.getPublickey().getE().toString(2));
         BigInteger desencryptedkey = CustomRSAChiper.getInstance().encryptBlock(messageint, key.getPublickey());
 
         return desencryptedkey.toString(2);
