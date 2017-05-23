@@ -60,8 +60,10 @@ public class CustomRSAChiper implements IRSAChiper {
 
         } while (p.equals(q));
 
+        // n = pq
         nproduct = p.multiply(q);
 
+        // phi = (p-1)(q-1)
         phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
 
@@ -73,6 +75,7 @@ public class CustomRSAChiper implements IRSAChiper {
         } while (e.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !e.gcd(phi).equals(BigInteger.ONE));
 
 
+        // de = 1 mod phi
         d = e.modInverse(phi);
 
 

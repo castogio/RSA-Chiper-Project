@@ -1,148 +1,172 @@
 package foundation.math;
 
+/******************************************************************************
+ *  Compilation:  javac BigRational.java
+ *  Execution:    java BigRational
+ *
+ *  Immutable ADT for arbitrarily large Rational numbers.
+ *
+ *  Invariants
+ *  ----------
+ *   -  gcd(num, den) = 1, i.e., rational number is in reduced form
+ *   -  den >= 1, i.e., the denominator is always a positive integer
+ *   -  0/1 is the unique representation of zero
+ *
+ *  % java BigRational
+ *  5/6
+ *  1
+ *  1/120000000
+ *  1073741789/12
+ *  1
+ *  841/961
+ *  -1/3
+ *  0
+ *  true
+ *  Exception in thread "main" java.lang.ArithmeticException: Denominator is zero
+ *
+ ******************************************************************************/
+
+import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.RoundingMode;
+import java.util.Objects;
 
-/**
- * Created by gioacchino on 22/05/17.
- */
-public class BigRational {
+public class BigRational implements Comparable<BigRational> {
 
-    private BigInteger numerator;
-    private BigInteger denominator;
+    public final static BigRational ZERO = new BigRational(0);
+    public final static BigRational ONE  = new BigRational(1);
+    public final static BigRational TWO  = new BigRational(2);
 
-    public BigRational(BigInteger numerator, BigInteger denominator) {
-        this.setNumerator(numerator);
-        this.setDenominator(denominator);
+    private BigInteger num;   // the numerator
+    private BigInteger den;   // the denominator (always a positive integer)
+
+
+    // create and initialize a new BigRational object
+    public BigRational(int numerator, int denominator) {
+        this(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
     }
 
-    private BigRational() {
+    // create and initialize a new BigRational object
+    public BigRational(int numerator) {
+        this(numerator, 1);
     }
 
-    public BigInteger getNumerator() {
-        return numerator;
-    }
-
-    public void setNumerator(BigInteger numerator) {
-        this.numerator = numerator;
-    }
-
-    public BigInteger getDenominator() {
-        return denominator;
-    }
-
-    public void setDenominator(BigInteger denominator) throws ArithmeticException {
-
-        BigInteger gcd;
-
-        if (denominator.equals(BigInteger.ZERO))
-            throw new ArithmeticException("Denominator cannot be 0");
-
-        gcd = this.numerator.gcd(denominator);
-
-        if (!gcd.equals(BigInteger.ONE)) {
-            this.numerator = this.numerator.divide(gcd);
-            this.denominator = denominator.divide(gcd);
-        }
+    // create and initialize a new BigRational object from a string, e.g., "-343/1273"
+    public BigRational(String s) {
+        String[] tokens = s.split("/");
+        if (tokens.length == 2)
+            init(new BigInteger(tokens[0]), new BigInteger(tokens[1]));
+        else if (tokens.length == 1)
+            init(new BigInteger(tokens[0]), BigInteger.ONE);
         else
-            this.denominator = denominator;
-
+            throw new IllegalArgumentException("For input string: \"" + s + "\"");
     }
 
-    public BigRational getReciprocal() throws ArithmeticException {
-
-        BigRational reciprocal;
-
-        if (this.isZero())
-            throw new ArithmeticException("Reciprocal of 0 does not exist");
-
-        reciprocal = new BigRational();
-
-        reciprocal.setNumerator(this.denominator);
-        reciprocal.setDenominator(this.numerator);
-
-        return reciprocal;
-
+    // create and initialize a new BigRational object
+    public BigRational(BigInteger numerator, BigInteger denominator) {
+        init(numerator, denominator);
     }
 
-    public BigRational copy() {
-        return new BigRational(this.numerator, this.denominator);
-    }
+    private void init(BigInteger numerator, BigInteger denominator) {
 
-    public List<RationalExpansionPair> getContinousFractionExpansion() {
-
-        List<RationalExpansionPair> expansion = new ArrayList<>();
-        RationalExpansionPair steppair;
-
-        BigRational tmpfraction = this.copy();
-
-        do {
-
-            steppair = tmpfraction.splitIntegerPlusRational();
-            expansion.add(steppair);
-            if (!steppair.getRationalPart().isZero())
-            tmpfraction = steppair.getRationalPart().getReciprocal();
-
-        } while (!steppair.getRationalPart().isZero());
-
-        return expansion;
-
-    }
-
-    public RationalExpansionPair splitIntegerPlusRational() throws ArithmeticException {
-
-        BigRational rationalpart = new BigRational();
-        BigInteger integerpart = this.getNumerator().divide(this.getDenominator());
-
-        rationalpart.setNumerator(this.numerator.subtract(integerpart.multiply(this.denominator)));
-        rationalpart.setDenominator(this.denominator);
-
-
-        return new RationalExpansionPair(integerpart, rationalpart);
-    }
-
-    public boolean isZero() {
-
-        return this.numerator.equals(BigInteger.ZERO);
-
-    }
-
-    public String toString(int radix) {
-        return this.numerator.toString(radix) + " / " + this.denominator.toString(radix);
-    }
-
-    public class RationalExpansionPair {
-
-        private BigInteger integerpart;
-        private BigRational rationalpart;
-
-        public RationalExpansionPair(BigInteger integerpart, BigRational rationalpart) {
-            this.integerpart = integerpart;
-            this.rationalpart = rationalpart;
+        // deal with x / 0
+        if (denominator.equals(BigInteger.ZERO)) {
+            throw new ArithmeticException("Denominator is zero");
         }
 
-        public RationalExpansionPair() {
-        }
+        // reduce fraction (if num = 0, will always yield den = 0)
+        BigInteger g = numerator.gcd(denominator);
+        num = numerator.divide(g);
+        den = denominator.divide(g);
 
-        public BigInteger getIntegerPart() {
-            return integerpart;
-        }
-
-        public void setIntegerPart(BigInteger integerpart) {
-            this.integerpart = integerpart;
-        }
-
-        public BigRational getRationalPart() {
-            return rationalpart;
-        }
-
-        public void setRationalPart(BigRational rationalpart) {
-            this.rationalpart = rationalpart;
-        }
-
-        public String toString(int radix) {
-            return this.integerpart.toString(radix) + " + " + this.rationalpart.toString(radix);
+        // to ensure invariant that denominator is positive
+        if (den.compareTo(BigInteger.ZERO) < 0) {
+            den = den.negate();
+            num = num.negate();
         }
     }
+
+    // return string representation of (this)
+    public String toString() {
+        if (den.equals(BigInteger.ONE)) return num + "";
+        else                            return num + "/" + den;
+    }
+
+    // return { -1, 0, + 1 } if a < b, a = b, or a > b
+    public int compareTo(BigRational b) {
+        BigRational a = this;
+        return a.num.multiply(b.den).compareTo(a.den.multiply(b.num));
+    }
+
+    // is this BigRational negative, zero, or positive?
+    public boolean isZero()     { return num.signum() == 0; }
+    public boolean isPositive() { return num.signum() >  0; }
+    public boolean isNegative() { return num.signum() <  0; }
+
+    // is this Rational object equal to y?
+    public boolean equals(Object y) {
+        if (y == this) return true;
+        if (y == null) return false;
+        if (y.getClass() != this.getClass()) return false;
+        BigRational b = (BigRational) y;
+        return compareTo(b) == 0;
+    }
+
+    // hashCode consistent with equals() and compareTo()
+    public int hashCode() {
+        return Objects.hash(num, den);
+    }
+
+
+    // return a * b
+    public BigRational times(BigRational b) {
+        BigRational a = this;
+        return new BigRational(a.num.multiply(b.num), a.den.multiply(b.den));
+    }
+
+    // return a + b
+    public BigRational plus(BigRational b) {
+        BigRational a = this;
+        BigInteger numerator   = a.num.multiply(b.den).add(b.num.multiply(a.den));
+        BigInteger denominator = a.den.multiply(b.den);
+        return new BigRational(numerator, denominator);
+    }
+
+    // return -a
+    public BigRational negate() {
+        return new BigRational(num.negate(), den);
+    }
+
+    // return |a|
+    public BigRational abs() {
+        if (isNegative()) return negate();
+        else return this;
+    }
+
+    // return a - b
+    public BigRational minus(BigRational b) {
+        BigRational a = this;
+        return a.plus(b.negate());
+    }
+
+    // return 1 / a
+    public BigRational reciprocal() {
+        return new BigRational(den, num);
+    }
+
+    // return a / b
+    public BigRational divides(BigRational b) {
+        BigRational a = this;
+        return a.times(b.reciprocal());
+    }
+
+    // return double reprentation (within given precision)
+    public double doubleValue() {
+        int SCALE = 32;        // number of digits after the decimal place
+        BigDecimal numerator   = new BigDecimal(num);
+        BigDecimal denominator = new BigDecimal(den);
+        BigDecimal quotient    = numerator.divide(denominator, SCALE, RoundingMode.HALF_EVEN);
+        return quotient.doubleValue();
+    }
+
 }
