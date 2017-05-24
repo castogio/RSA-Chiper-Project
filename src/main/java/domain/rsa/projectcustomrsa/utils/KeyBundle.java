@@ -8,7 +8,7 @@ public class KeyBundle {
     private PublicKey publickey;
     private PrivateKey privatekey;
 
-    public PublicKey getPublickey() {
+    public PublicKey getPublicKey() {
         return publickey;
     }
 

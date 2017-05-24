@@ -1,10 +1,12 @@
 import domain.rsa.projectcustomrsa.CustomRSAChiper;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
+import foundation.math.BigRational;
 
 import javax.crypto.*;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Created by gioacchino on 16/05/17.
@@ -71,13 +73,13 @@ public class App {
 
         KeyBundle kb = c.getVulnerableKeys(60);
 
-        System.out.println("N:" + kb.getPublickey().getN().toString(10));
+        System.out.println("N:" + kb.getPublicKey().getN().toString(10));
 
 
-        System.out.println("Numero bit chiave: " + kb.getPublickey().getE().bitLength());
+        System.out.println("Numero bit chiave: " + kb.getPublicKey().getE().bitLength());
 
 
-        BigInteger deschiavecriptata = c.encryptBlock(messageint, kb.getPublickey() );
+        BigInteger deschiavecriptata = c.encryptBlock(messageint, kb.getPublicKey() );
 
         System.out.println("Testo chiaro: " +  messageint.toString(2));
 
@@ -89,8 +91,10 @@ public class App {
         //System.out.println(decriptato.toString(2));
         String decr = new String(decriptato.toByteArray());
 
-        System.out.println("Chiave pubblica E: " + kb.getPublickey().getE().toString(2) );
-        System.out.println("Chiave pubblica N: " + kb.getPublickey().getN().toString(2) );
+        System.out.println("Chiave pubblica E: " + kb.getPublicKey().getE().toString(2) );
+        System.out.println("Chiave pubblica N: " + kb.getPublicKey().getN().toString(2) );
+
+        //System.out.println("");
 
 
 
@@ -99,13 +103,18 @@ public class App {
         // controllo attacco di Wiener
         BigInteger d = kb.getPrivatekey().getD();
 
-        BigInteger n = kb.getPublickey().getN();
+        BigInteger n = kb.getPublicKey().getN();
 
         System.out.println("N: " + n.toString(10));
         System.out.println(" 1/3  Radice quarta: " + sqrt(sqrt(n)).divide(BigInteger.valueOf(3)).toString(10));
         System.out.println(" d: " + d.toString(10));
 
         System.out.println(d.compareTo(sqrt(sqrt(n)).divide(BigInteger.valueOf(3))));
+
+        // ATTACCO DI WIENER
+
+        c.attackRSA(kb.getPublicKey());
+
 
 
 

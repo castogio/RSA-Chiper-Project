@@ -13,14 +13,19 @@ public class BigRational {
     private BigInteger denominator;
 
 
-    public static BigRational recomposeConvergent(List<BigInteger> numbers) {
+    public static BigRational recomposeConvergent(List<BigInteger> expansion) {
 
-        BigRational result = new BigRational(numbers.remove(numbers.size()-1), BigInteger.ONE); // a_n / 1
+        List<BigInteger> tmplist = new ArrayList<>();
+        for (BigInteger term : expansion) {
+            tmplist.add(term.add(BigInteger.ZERO));
+        }
 
-        while (!numbers.isEmpty()) {
+        BigRational result = new BigRational(tmplist.remove(tmplist.size()-1), BigInteger.ONE); // a_n / 1
+
+        while (!tmplist.isEmpty()) {
 
             // trova il reciproco e somma a_{n-1}
-            result = result.getReciprocal().sum(numbers.remove(numbers.size()-1));
+            result = result.getReciprocal().sum(tmplist.remove(tmplist.size()-1));
 
         }
 
@@ -138,7 +143,7 @@ public class BigRational {
     }
 
 
-    public List<BigInteger> getListIntegersContinousFraction() {
+    public List<BigInteger> getListIntegersContinuedFraction() {
 
         List<BigInteger> integers = new ArrayList<>();
         RationalExpansionPair steppair;
