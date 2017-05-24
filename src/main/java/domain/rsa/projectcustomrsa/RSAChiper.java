@@ -6,27 +6,25 @@ import domain.rsa.projectcustomrsa.utils.PrivateKey;
 import domain.rsa.projectcustomrsa.utils.PublicKey;
 import foundation.math.BigRational;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.util.*;
 
 /**
  * Created by gioacchino on 16/05/17.
  */
-public class CustomRSAChiper implements IRSAChiper {
+public class RSAChiper implements IRSAChiper {
 
     public final static short FIRST_INTEGER_BIGGER_THAN_SECOND = 1;
     public final static short FIRST_INTEGER_EQUAL_TO_SECOND = 0;
 
 
-    private static CustomRSAChiper ourInstance = new CustomRSAChiper();
+    private static RSAChiper ourInstance = new RSAChiper();
 
-    public static CustomRSAChiper getInstance() {
+    public static RSAChiper getInstance() {
         return ourInstance;
     }
 
-    private CustomRSAChiper() {
+    private RSAChiper() {
     }
 
     /**
@@ -62,8 +60,8 @@ public class CustomRSAChiper implements IRSAChiper {
             p = BigInteger.probablePrime(factorlength, rnd);
             q = BigInteger.probablePrime(factorlength, rnd);
 
-        } while (!(p.compareTo(q) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
-                q.multiply(BigInteger.valueOf(2)).compareTo(p) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
+        } while (!(p.compareTo(q) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
+                q.multiply(BigInteger.valueOf(2)).compareTo(p) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
 
         System.out.println("p: " + p.toString(10));
         System.out.println("q: " + q.toString(10));
@@ -86,7 +84,7 @@ public class CustomRSAChiper implements IRSAChiper {
 
             d = new BigInteger(maxnumbit, rnd);
 
-        } while (d.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !d.gcd(phi).equals(BigInteger.ONE));
+        } while (d.compareTo(phi) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !d.gcd(phi).equals(BigInteger.ONE));
 
 
         // de = 1 mod phi

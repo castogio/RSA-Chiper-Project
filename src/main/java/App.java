@@ -1,12 +1,10 @@
-import domain.rsa.projectcustomrsa.CustomRSAChiper;
+import domain.rsa.projectcustomrsa.RSAChiper;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
-import foundation.math.BigRational;
 
 import javax.crypto.*;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 /**
  * Created by gioacchino on 16/05/17.
@@ -69,7 +67,7 @@ public class App {
 
         BigInteger messageint = new BigInteger(message.getBytes());
 
-        CustomRSAChiper c = CustomRSAChiper.getInstance();
+        RSAChiper c = RSAChiper.getInstance();
 
         KeyBundle kb = c.getVulnerableKeys(60);
 
