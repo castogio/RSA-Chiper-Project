@@ -14,18 +14,15 @@ import java.util.*;
  */
 public class RSAChiper implements IRSAChiper {
 
-    public final static short FIRST_INTEGER_BIGGER_THAN_SECOND = 1;
-    public final static short FIRST_INTEGER_EQUAL_TO_SECOND = 0;
+    private final static short FIRST_INTEGER_BIGGER_THAN_SECOND = 1;
 
-
+    // start implementazone singleton
     private static RSAChiper ourInstance = new RSAChiper();
-
     public static RSAChiper getInstance() {
         return ourInstance;
     }
-
-    private RSAChiper() {
-    }
+    private RSAChiper() {}
+    // end implementazone singleton
 
     /**
      * Generazione delle chiavi RSA
@@ -33,7 +30,7 @@ public class RSAChiper implements IRSAChiper {
      * @param factorlength Lunghezza in bit dei fattori p e q
      * @return Bundle delle chiavi pubbliche e private
      */
-    public KeyBundle getVulnerableKeys(int factorlength) {
+    public KeyBundle getWienerAttackableKeys(int factorlength) {
 
 
         PrivateKey privateKey = new PrivateKey();

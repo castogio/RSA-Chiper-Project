@@ -32,7 +32,7 @@ public class ChiperProject {
 
         // ottenimento della chiave pubblica e privata (generazione casuale)
         factorbitlenght = 512;
-        keychain = chiper.getVulnerableKeys(factorbitlenght);
+        keychain = chiper.getWienerAttackableKeys(factorbitlenght);
 
         // output delle chiavi
         System.out.println("CHIAVI GENERATE");

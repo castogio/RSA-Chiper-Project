@@ -69,7 +69,7 @@ public class App {
 
         RSAChiper c = RSAChiper.getInstance();
 
-        KeyBundle kb = c.getVulnerableKeys(60);
+        KeyBundle kb = c.getWienerAttackableKeys(60);
 
         System.out.println("N:" + kb.getPublicKey().getN().toString(10));
 

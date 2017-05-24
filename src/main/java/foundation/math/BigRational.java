@@ -13,6 +13,11 @@ public class BigRational {
     private BigInteger denominator;
 
 
+    /**
+     * Ricostruisce il convergente n-esimo
+     * @param expansion Lista degli n termini del convergente
+     * @return Numero razionale del convergente
+     */
     public static BigRational recomposeConvergent(List<BigInteger> expansion) {
 
         List<BigInteger> tmplist = new ArrayList<>();
@@ -33,11 +38,19 @@ public class BigRational {
 
     }
 
+    /**
+     * Costruisce un numero razionale con numeratore e denominatore
+     * @param numerator Intero numeratore
+     * @param denominator Intero denominatore
+     */
     public BigRational(BigInteger numerator, BigInteger denominator) {
         this.setNumerator(numerator);
         this.setDenominator(denominator);
     }
 
+    /**
+     * Costruisce un numero razione vuoto
+     */
     private BigRational() {
     }
 
@@ -66,20 +79,11 @@ public class BigRational {
 
     }
 
-    private void semplify() {
-
-        if (this.numerator != null && this.denominator != null) {
-
-            BigInteger gcd = this.numerator.gcd(denominator);
-
-            if (!gcd.equals(BigInteger.ONE)) {
-                this.numerator = this.numerator.divide(gcd);
-                this.denominator = denominator.divide(gcd);
-            }
-
-        }
-    }
-
+    /**
+     * Ottiene il reciproco del razionale
+     * @return Razionale reciproco
+     * @throws ArithmeticException Lanciato se il razionale è nullo
+     */
     public BigRational getReciprocal() throws ArithmeticException {
 
         BigRational reciprocal;
@@ -96,6 +100,11 @@ public class BigRational {
 
     }
 
+    /**
+     * Somma di due razionali
+     * @param val Razionale da sommare
+     * @return Razionale somma
+     */
     public BigRational sum(BigInteger val) {
 
         BigRational sum = new BigRational();
@@ -106,14 +115,20 @@ public class BigRational {
         return sum;
     }
 
+    /**
+     * Effettua una copia del razionale
+     * @return Deep copy
+     */
     public BigRational copy() {
+
         return new BigRational(this.numerator, this.denominator);
     }
 
-    public List<RationalExpansionPair> getContinousFractionExpansion() {
+    /*
+    public List<SumIntegerPlusRational> getContinousFractionExpansion() {
 
-        List<RationalExpansionPair> expansion = new ArrayList<>();
-        RationalExpansionPair steppair;
+        List<SumIntegerPlusRational> expansion = new ArrayList<>();
+        SumIntegerPlusRational steppair;
 
         BigRational tmpfraction = this.copy();
 
@@ -129,8 +144,14 @@ public class BigRational {
         return expansion;
 
     }
+    */
 
-    public RationalExpansionPair splitIntegerPlusRational() throws ArithmeticException {
+    /**
+     * Decompone il razionale in un intero sommato ad un razionale
+     * @return Somma intero razionale
+     * @throws ArithmeticException
+     */
+    public SumIntegerPlusRational splitIntegerPlusRational() throws ArithmeticException {
 
         BigRational rationalpart = new BigRational();
         BigInteger integerpart = this.getNumerator().divide(this.getDenominator());
@@ -139,14 +160,17 @@ public class BigRational {
         rationalpart.setDenominator(this.denominator);
 
 
-        return new RationalExpansionPair(integerpart, rationalpart);
+        return new SumIntegerPlusRational(integerpart, rationalpart);
     }
 
-
+    /**
+     * Decomposizione del razionale nella lista di interi che compongono la continued fraction
+     * @return Lista degli interi
+     */
     public List<BigInteger> getListIntegersContinuedFraction() {
 
         List<BigInteger> integers = new ArrayList<>();
-        RationalExpansionPair steppair;
+        SumIntegerPlusRational steppair;
 
         BigRational tmpfraction = this.copy();
 
@@ -162,6 +186,10 @@ public class BigRational {
         return integers;
     }
 
+    /**
+     * Controlla se il numero razionale è nullo
+     * @return false se il numeratore è nullo
+     */
     public boolean isZero() {
 
         return this.numerator.equals(BigInteger.ZERO);
@@ -172,17 +200,38 @@ public class BigRational {
         return this.numerator.toString(radix) + " / " + this.denominator.toString(radix);
     }
 
-    public class RationalExpansionPair {
+    /**
+     * Semplificazione del numeratore e del denominatore
+     */
+    private void semplify() {
+
+        if (this.numerator != null && this.denominator != null) {
+
+            BigInteger gcd = this.numerator.gcd(denominator);
+
+            if (!gcd.equals(BigInteger.ONE)) {
+                this.numerator = this.numerator.divide(gcd);
+                this.denominator = denominator.divide(gcd);
+            }
+
+        }
+    }
+
+
+    /**
+     * Inner class per la decomposizione in convergenti
+     */
+    public class SumIntegerPlusRational {
 
         private BigInteger integerpart;
         private BigRational rationalpart;
 
-        public RationalExpansionPair(BigInteger integerpart, BigRational rationalpart) {
+        public SumIntegerPlusRational(BigInteger integerpart, BigRational rationalpart) {
             this.integerpart = integerpart;
             this.rationalpart = rationalpart;
         }
 
-        public RationalExpansionPair() {
+        public SumIntegerPlusRational() {
         }
 
         public BigInteger getIntegerPart() {
