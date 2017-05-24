@@ -12,7 +12,7 @@ public class KeyBundle {
         return publickey;
     }
 
-    public void setPublickey(PublicKey publickey) {
+    public void setPublicKey(PublicKey publickey) {
         this.publickey = publickey;
     }
 
@@ -20,7 +20,7 @@ public class KeyBundle {
         return privatekey;
     }
 
-    public void setPrivatekey(PrivateKey privatekey) {
+    public void setPrivateKey(PrivateKey privatekey) {
         this.privatekey = privatekey;
     }
 }

@@ -6,7 +6,9 @@ import domain.rsa.projectcustomrsa.utils.PrivateKey;
 import domain.rsa.projectcustomrsa.utils.PublicKey;
 import foundation.math.BigRational;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
 import java.util.*;
 
 /**
@@ -101,8 +103,8 @@ public class CustomRSAChiper implements IRSAChiper {
         publicKey.setE(e);
 
         // bundle di chiavi
-        kb.setPrivatekey(privateKey);
-        kb.setPublickey(publicKey);
+        kb.setPrivateKey(privateKey);
+        kb.setPublicKey(publicKey);
 
         return kb;
     }
@@ -122,7 +124,11 @@ public class CustomRSAChiper implements IRSAChiper {
     @Override
     public KeyBundle attackRSA(PublicKey publicKey) {
 
-        boolean foundkeys = false;
+        KeyBundle returnKeys = null;
+
+        boolean hasfound = false;
+
+        PrivateKey privatefoundkeys = null;
         BigRational tmpconvergent = null;
 
         BigRational candidatephi = null;
@@ -135,7 +141,7 @@ public class CustomRSAChiper implements IRSAChiper {
         //System.out.println(BigRational.recomposeConvergent(convergents).toString(10));
 
 
-        for (int i = 1; !foundkeys && i < convergents.size(); i++) {
+        for (int i = 1; !hasfound && i < convergents.size(); i++) {
 
             tmpconvergent = BigRational.recomposeConvergent(convergents.subList(0, i+1));
 
@@ -149,19 +155,31 @@ public class CustomRSAChiper implements IRSAChiper {
 
                 System.out.println("Ne ho trovato uno!");
 
-                this.solveFactorizationEquation(candidatephi, publicKey.getN());
+                privatefoundkeys = this.solveFactorizationEquation(candidatephi, publicKey.getN());
+
+                if (privatefoundkeys != null) {
+                    System.out.println("È quello giusto");
+                    hasfound = true;
+                }
+
 
 
             }
 
+        }
 
+        if (privatefoundkeys != null) { // se abbiamo trovato p e q possiamo calcolare d
 
+            privatefoundkeys.setD(publicKey.getE().modInverse(candidatephi.getNumerator()));
 
+            returnKeys = new KeyBundle();
+            returnKeys.setPrivateKey(privatefoundkeys);
+            returnKeys.setPublicKey(publicKey);
 
         }
 
 
-        return null;
+        return returnKeys;
     }
 
     private BigInteger getSquareRoot(BigInteger n) {
@@ -178,35 +196,66 @@ public class CustomRSAChiper implements IRSAChiper {
         return a.subtract(BigInteger.ONE);
     }
 
-    private BigInteger solveFactorizationEquation(BigRational candidatephi, BigInteger nproduct) {
+    private PrivateKey solveFactorizationEquation(BigRational candidatephi, BigInteger nproduct) {
+
+        PrivateKey privateKey = null;
 
         BigInteger four = BigInteger.valueOf(4);
         BigInteger two = BigInteger.valueOf(2);
+
+        BigInteger sqrtDelta;
+        BigInteger delta;
+        BigInteger tmpnumerator;
 
         // results
         BigRational x1 = null;
         BigRational x2 = null;
 
+
         // x^2 - (n+1-C)x + n
 
+        // (n+1-C)
         BigInteger xcoefficient = nproduct.add(BigInteger.ONE).subtract(candidatephi.getNumerator());
 
-        // -b + sqrt(b^2 -4ac)
-        BigInteger tmpnumerator  = xcoefficient.add(this.getSquareRoot(xcoefficient.pow(2).subtract(nproduct.multiply(four))));
-        x1 = new BigRational(tmpnumerator, two);
+        // sqrt(b^2 -4ac)
+        // delta = b^2 -4ac
+        delta = xcoefficient.pow(2).subtract(nproduct.multiply(four));
+        sqrtDelta = this.getSquareRoot(delta);
+
+        if (sqrtDelta.pow(2).equals(delta)) { // ciò è possibile <--> delta è un quadrato perfetto
+
+            // -b + sqrt(b^2 -4ac)
+            tmpnumerator  = xcoefficient.add(sqrtDelta);
+            x1 = new BigRational(tmpnumerator, two);
+
+
+            if (x1.getDenominator().equals(BigInteger.ONE)) {
+
+                tmpnumerator  = xcoefficient.subtract(sqrtDelta);
+                x2 = new BigRational(tmpnumerator, two);
+
+                if (x2.getDenominator().equals(BigInteger.ONE)) {
+                    // se sono entrambi interi
+
+                    System.out.println(x1.getNumerator().toString(10));
+                    System.out.println(x2.getNumerator().toString(10));
+
+                    privateKey = new PrivateKey();
+
+                    // restituisci tutta la chiave privata
+                    privateKey.setP(x1.getNumerator()); // p
+                    privateKey.setQ(x2.getNumerator()); // q
+                    privateKey.setN(nproduct);
 
 
 
-        if (x1.getDenominator().equals(BigInteger.ONE)) {
+                }
 
-            tmpnumerator  = xcoefficient.subtract(this.getSquareRoot(xcoefficient.pow(2).subtract(nproduct.multiply(four))));
-            x2 = new BigRational(tmpnumerator, two);
-            System.out.println(x1.toString(10));
-            System.out.println(x2.toString(10));
+            }
 
         }
 
-        return x1.getNumerator();
+        return privateKey;
 
 
     }
