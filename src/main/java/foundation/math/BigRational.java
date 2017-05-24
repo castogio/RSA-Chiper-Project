@@ -12,6 +12,23 @@ public class BigRational {
     private BigInteger numerator;
     private BigInteger denominator;
 
+
+    public static BigRational recomposeConvergent(List<BigInteger> numbers) {
+
+        BigRational result = new BigRational(numbers.remove(numbers.size()-1), BigInteger.ONE); // a_n / 1
+
+        while (!numbers.isEmpty()) {
+
+            // trova il reciproco e somma a_{n-1}
+            result = result.getReciprocal().sum(numbers.remove(numbers.size()-1));
+
+        }
+
+
+        return result;
+
+    }
+
     public BigRational(BigInteger numerator, BigInteger denominator) {
         this.setNumerator(numerator);
         this.setDenominator(denominator);
@@ -26,6 +43,8 @@ public class BigRational {
 
     public void setNumerator(BigInteger numerator) {
         this.numerator = numerator;
+
+        this.semplify();
     }
 
     public BigInteger getDenominator() {
@@ -34,20 +53,27 @@ public class BigRational {
 
     public void setDenominator(BigInteger denominator) throws ArithmeticException {
 
-        BigInteger gcd;
-
         if (denominator.equals(BigInteger.ZERO))
             throw new ArithmeticException("Denominator cannot be 0");
 
-        gcd = this.numerator.gcd(denominator);
+        this.denominator = denominator;
 
-        if (!gcd.equals(BigInteger.ONE)) {
-            this.numerator = this.numerator.divide(gcd);
-            this.denominator = denominator.divide(gcd);
+        this.semplify();
+
+    }
+
+    private void semplify() {
+
+        if (this.numerator != null && this.denominator != null) {
+
+            BigInteger gcd = this.numerator.gcd(denominator);
+
+            if (!gcd.equals(BigInteger.ONE)) {
+                this.numerator = this.numerator.divide(gcd);
+                this.denominator = denominator.divide(gcd);
+            }
+
         }
-        else
-            this.denominator = denominator;
-
     }
 
     public BigRational getReciprocal() throws ArithmeticException {
@@ -130,16 +156,6 @@ public class BigRational {
         } while (!steppair.getRationalPart().isZero());
 
         return integers;
-    }
-
-    // TODO completare
-    public BigRational getConvergent(int n) {
-
-        List<BigInteger> listconvergent = this.getListIntegersContinousFraction();
-
-
-        return new BigRational();
-
     }
 
     public boolean isZero() {
