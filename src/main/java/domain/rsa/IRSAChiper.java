@@ -11,7 +11,7 @@ import java.math.BigInteger;
  */
 public interface IRSAChiper {
 
-    KeyBundle getKeys(int pfactorlength, int qfactorlength);
+    public KeyBundle getVulnerableKeys(int factorlength);
 
     BigInteger encryptBlock(BigInteger plainmessage, PublicKey key);
 

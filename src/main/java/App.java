@@ -2,12 +2,9 @@ import domain.rsa.projectcustomrsa.CustomRSAChiper;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
 
 import javax.crypto.*;
-import javax.crypto.spec.SecretKeySpec;
 import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Base64;
 
 /**
  * Created by gioacchino on 16/05/17.
@@ -18,6 +15,7 @@ public class App {
 
 
         // generazione chiave DES
+        /*
         KeyGenerator kg = KeyGenerator.getInstance("DES");
         SecretKey key = kg.generateKey();
         String encodedKey = Base64.getEncoder().encodeToString(key.getEncoded());
@@ -62,12 +60,16 @@ public class App {
 
         System.out.println("Text Decryted : " + new String(textDecrypted));
 
+        */
         // test criptazione messaggio des
 
+        String message = "Ciao";
+
+        BigInteger messageint = new BigInteger(message.getBytes());
 
         CustomRSAChiper c = CustomRSAChiper.getInstance();
 
-        KeyBundle kb = c.getKeys(60, 30);
+        KeyBundle kb = c.getVulnerableKeys(60);
 
         System.out.println("N:" + kb.getPublickey().getN().toString(10));
 
@@ -85,13 +87,25 @@ public class App {
         BigInteger decriptato = c.decryptBlock(deschiavecriptata, kb.getPrivatekey());
 
         //System.out.println(decriptato.toString(2));
+        String decr = new String(decriptato.toByteArray());
 
         System.out.println("Chiave pubblica E: " + kb.getPublickey().getE().toString(2) );
         System.out.println("Chiave pubblica N: " + kb.getPublickey().getN().toString(2) );
 
 
 
-        System.out.println("Testo decriptato: " +  decriptato.toString(2));
+        System.out.println("Testo decriptato: " +  decr);
+
+        // controllo attacco di Wiener
+        BigInteger d = kb.getPrivatekey().getD();
+
+        BigInteger n = kb.getPublickey().getN();
+
+        System.out.println("N: " + n.toString(10));
+        System.out.println(" 1/3  Radice quarta: " + sqrt(sqrt(n)).divide(BigInteger.valueOf(3)).toString(10));
+        System.out.println(" d: " + d.toString(10));
+
+        System.out.println(d.compareTo(sqrt(sqrt(n)).divide(BigInteger.valueOf(3))));
 
 
 
@@ -108,5 +122,19 @@ public class App {
 
 
 
+    }
+
+    static BigInteger sqrt(BigInteger n) {
+        BigInteger a = BigInteger.ONE;
+        BigInteger b = n.shiftRight(5).add(BigInteger.valueOf(8));
+        while (b.compareTo(a) >= 0) {
+            BigInteger mid = a.add(b).shiftRight(1);
+            if (mid.multiply(mid).compareTo(n) > 0) {
+                b = mid.subtract(BigInteger.ONE);
+            } else {
+                a = mid.add(BigInteger.ONE);
+            }
+        }
+        return a.subtract(BigInteger.ONE);
     }
 }

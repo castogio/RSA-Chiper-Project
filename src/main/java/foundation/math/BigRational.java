@@ -24,7 +24,6 @@ public class BigRational {
 
         }
 
-
         return result;
 
     }

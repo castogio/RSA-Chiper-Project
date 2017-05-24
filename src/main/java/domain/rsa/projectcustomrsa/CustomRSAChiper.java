@@ -29,11 +29,10 @@ public class CustomRSAChiper implements IRSAChiper {
     /**
      * Generazione delle chiavi RSA
      *
-     * @param pfactorlength Lunghezza in bit del fattore p
-     * @param qfactorlength Lunghezza in bit del fattore q
+     * @param factorlength Lunghezza in bit dei fattori p e q
      * @return Bundle delle chiavi pubbliche e private
      */
-    public KeyBundle getKeys(int pfactorlength, int qfactorlength) {
+    public KeyBundle getVulnerableKeys(int factorlength) {
 
 
         PrivateKey privateKey = new PrivateKey();
@@ -55,11 +54,16 @@ public class CustomRSAChiper implements IRSAChiper {
 
         do {
 
-            p = BigInteger.probablePrime(pfactorlength, rnd);
-            q = BigInteger.probablePrime(qfactorlength, rnd);
+            // nota che p e q
+            p = BigInteger.probablePrime(factorlength, rnd);
+            q = BigInteger.probablePrime(factorlength, rnd);
 
-        } while (p.equals(q));
+        } while (!(p.compareTo(q) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
+                q.multiply(BigInteger.valueOf(2)).compareTo(p) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
 
+        System.out.println("p: " + p.toString(10));
+        System.out.println("q: " + q.toString(10));
+        System.out.println("2q: " + q.multiply(BigInteger.valueOf(2)).toString(10));
         // n = pq
         nproduct = p.multiply(q);
 
@@ -67,16 +71,51 @@ public class CustomRSAChiper implements IRSAChiper {
         phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
 
 
-        // genera la chiave pubblica
+
+        // upper bound dell'esponente privato
+        // d < 1/3 * (n)^{1/4}
+        int maxnumbit = this.getSquareRoot(this.getSquareRoot(nproduct)).divide(BigInteger.valueOf(3)).bitLength() - 1;
+
         do {
 
-            e = new BigInteger(phi.bitLength(), rnd).add(BigInteger.ONE);
+            d = new BigInteger(maxnumbit, rnd);
 
-        } while (e.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !e.gcd(phi).equals(BigInteger.ONE));
+        } while (d.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !d.gcd(phi).equals(BigInteger.ONE));
 
 
         // de = 1 mod phi
-        d = e.modInverse(phi);
+        e = d.modInverse(phi);
+
+
+
+
+
+
+
+        /*
+        do {
+
+            e = new BigInteger(phi.bitLength() , rnd).add(BigInteger.ONE);
+
+        } while (e.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !e.gcd(phi).equals(BigInteger.ONE));
+        */
+
+        /*
+        e = BigInteger.ONE;
+
+        do {
+
+            e = e.add(BigInteger.ONE);
+
+        } while (e.compareTo(phi) == CustomRSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !e.gcd(phi).equals(BigInteger.ONE));
+        */
+
+
+
+        // de = 1 mod phi
+        //d = e.modInverse(phi);
+
+
 
 
         // creazione bundle finali
@@ -110,6 +149,20 @@ public class CustomRSAChiper implements IRSAChiper {
     @Override
     public KeyBundle attackRSA(PublicKey publicKey) {
         return null;
+    }
+
+    private BigInteger getSquareRoot(BigInteger n) {
+        BigInteger a = BigInteger.ONE;
+        BigInteger b = n.shiftRight(5).add(BigInteger.valueOf(8));
+        while (b.compareTo(a) >= 0) {
+            BigInteger mid = a.add(b).shiftRight(1);
+            if (mid.multiply(mid).compareTo(n) > 0) {
+                b = mid.subtract(BigInteger.ONE);
+            } else {
+                a = mid.add(BigInteger.ONE);
+            }
+        }
+        return a.subtract(BigInteger.ONE);
     }
 
 
