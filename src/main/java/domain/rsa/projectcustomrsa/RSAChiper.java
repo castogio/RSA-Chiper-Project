@@ -63,18 +63,11 @@ public class RSAChiper implements IRSAChiper {
         } while (!(p.compareTo(q) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
                 q.multiply(BigInteger.valueOf(2)).compareTo(p) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
 
-        System.out.println("p: " + p.toString(10));
-        System.out.println("q: " + q.toString(10));
-        System.out.println("2q: " + q.multiply(BigInteger.valueOf(2)).toString(10));
         // n = pq
         nproduct = p.multiply(q);
 
         // phi = (p-1)(q-1)
         phi = p.subtract(BigInteger.ONE).multiply(q.subtract(BigInteger.ONE));
-
-        System.out.println("Phi: " + phi.toString(10));
-
-
 
         // upper bound dell'esponente privato che rispetti il teorema di Wiener
         // d < 1/3 * (n)^{1/4}
@@ -120,7 +113,7 @@ public class RSAChiper implements IRSAChiper {
     }
 
     @Override
-    public KeyBundle attackRSA(PublicKey publicKey) {
+    public KeyBundle attackWiener(PublicKey publicKey) {
 
         KeyBundle returnKeys = null;
 
@@ -134,9 +127,6 @@ public class RSAChiper implements IRSAChiper {
 
         // ottinei l'espansione in continued fraction di e/N
         List<BigInteger> convergents = (new BigRational(publicKey.getE(), publicKey.getN())).getListIntegersContinuedFraction();
-        System.out.println(convergents.toString());
-
-        //System.out.println(BigRational.recomposeConvergent(convergents).toString(10));
 
 
         for (int i = 1; !hasfound && i < convergents.size(); i++) {
@@ -150,17 +140,10 @@ public class RSAChiper implements IRSAChiper {
 
             if (candidatephi.getDenominator().equals(BigInteger.ONE)) { // controllo interezza numeratore
 
-
-                System.out.println("Ne ho trovato uno!");
-
                 privatefoundkeys = this.solveFactorizationEquation(candidatephi, publicKey.getN());
 
-                if (privatefoundkeys != null) {
-                    System.out.println("È quello giusto");
+                if (privatefoundkeys != null)
                     hasfound = true;
-                }
-
-
 
             }
 
@@ -179,6 +162,22 @@ public class RSAChiper implements IRSAChiper {
 
         return returnKeys;
     }
+
+    @Override
+    public boolean isWienerAttackable(PrivateKey privateKey) {
+
+        boolean attackable = false;
+        int compared;
+
+        // d < 1/3 * {n}^{1/4}
+        compared = privateKey.getD().compareTo(this.getSquareRoot(this.getSquareRoot(privateKey.getN()).divide(BigInteger.valueOf(3))));
+
+        if (compared == -1) {
+            attackable = true;
+        }
+        return attackable;
+    }
+
 
     private BigInteger getSquareRoot(BigInteger n) {
         BigInteger a = BigInteger.ONE;
@@ -232,12 +231,7 @@ public class RSAChiper implements IRSAChiper {
                 tmpnumerator  = xcoefficient.subtract(sqrtDelta);
                 x2 = new BigRational(tmpnumerator, two);
 
-                if (x2.getDenominator().equals(BigInteger.ONE)) {
-                    // se sono entrambi interi
-
-                    System.out.println(x1.getNumerator().toString(10));
-                    System.out.println(x2.getNumerator().toString(10));
-
+                if (x2.getDenominator().equals(BigInteger.ONE)) {// se sono entrambi interi
                     privateKey = new PrivateKey();
 
                     // restituisci tutta la chiave privata

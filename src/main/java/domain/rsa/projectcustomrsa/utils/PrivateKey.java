@@ -45,4 +45,12 @@ public class PrivateKey {
     public void setN(BigInteger nvalue) {
         this.nvalue = nvalue;
     }
+
+    public String toString(int radix) {
+        return "PRIVATE KEY\n" +
+                "d = " + dvalue.toString(radix) +
+                ",\np = " + pvalue.toString(radix) +
+                ",\nq = " + qvalue.toString(radix) +
+                ",\nn = " + nvalue.toString(radix);
+    }
 }

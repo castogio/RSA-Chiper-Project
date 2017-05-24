@@ -16,7 +16,7 @@ public class KeyBundle {
         this.publickey = publickey;
     }
 
-    public PrivateKey getPrivatekey() {
+    public PrivateKey getPrivateKey() {
         return privatekey;
     }
 

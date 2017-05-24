@@ -84,7 +84,7 @@ public class App {
         System.out.println("Testo deschiave criptata: " +  deschiavecriptata.toString(2));
 
 
-        BigInteger decriptato = c.decryptBlock(deschiavecriptata, kb.getPrivatekey());
+        BigInteger decriptato = c.decryptBlock(deschiavecriptata, kb.getPrivateKey());
 
         //System.out.println(decriptato.toString(2));
         String decr = new String(decriptato.toByteArray());
@@ -99,7 +99,7 @@ public class App {
         System.out.println("Testo decriptato: " +  decr);
 
         // controllo attacco di Wiener
-        BigInteger d = kb.getPrivatekey().getD();
+        BigInteger d = kb.getPrivateKey().getD();
 
         BigInteger n = kb.getPublicKey().getN();
 
@@ -111,7 +111,7 @@ public class App {
 
         // ATTACCO DI WIENER
 
-        c.attackRSA(kb.getPublicKey());
+        c.attackWiener(kb.getPublicKey());
 
 
 

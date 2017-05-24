@@ -33,6 +33,17 @@ public class ChiperProject {
         factorbitlenght = 80;
         keychain = chiper.getVulnerableKeys(factorbitlenght);
 
+        // output delle chiavi
+        System.out.println("CHIAVI GENERATE");
+        System.out.println("----------------------------------");
+        System.out.println(keychain.getPublicKey().toString(10) + "\n");
+        System.out.println("\n" + keychain.getPrivateKey().toString(10));
+
+        System.out.println("\n----------------------------------");
+        // controlla se la chiave privata è attaccabile con Wiener
+        System.out.println("Attaccabile con Wiener: " + chiper.isWienerAttackable(keychain.getPrivateKey()));
+        System.out.println("----------------------------------");
+
         // inizializzazione del messaggio da criptare
         messaggiochiaro = "Ciao Bob!";
         msgbytes = new BigInteger(messaggiochiaro.getBytes());
@@ -45,21 +56,30 @@ public class ChiperProject {
 
 
         // decriptazione del messaggio mediante la chiave privata
-        msgdecriptato = chiper.decryptBlock(msgcriptato, keychain.getPrivatekey());
+        msgdecriptato = chiper.decryptBlock(msgcriptato, keychain.getPrivateKey());
         messaggioricevuto = new String(msgdecriptato.toByteArray());
 
         // confrontiamo i messaggi criptato e decriptato
+        System.out.println("\n\nCONFRONTO DEI MESSAGGI");
+        System.out.println("----------------------------------");
         System.out.println("Testo chiaro originale: " +  messaggiochiaro);
         System.out.println("Testo decriptato: " +  messaggioricevuto);
+        System.out.println("----------------------------------\n\n");
 
 
         /* ------ EVELINE È A CONOSCENZA DELLA CHIAVE PUBBLICA  ------ */
 
-        crackerkeychain = chiper.attackRSA(keychain.getPublicKey());
+        // keychain generato dal cracker
+        crackerkeychain = chiper.attackWiener(keychain.getPublicKey());
+
+        System.out.println("CHIAVE PRIVATA GENERATA DAL CRACKER");
+        System.out.println("----------------------------------");
+        System.out.println(crackerkeychain.getPrivateKey().toString(10));
 
         // decriptazione del messaggio mediante la chiave privata
-        msgdecriptatocracker = chiper.decryptBlock(msgcriptato, crackerkeychain.getPrivatekey());
+        msgdecriptatocracker = chiper.decryptBlock(msgcriptato, crackerkeychain.getPrivateKey());
         messaggiochiarocracker = new String(msgdecriptatocracker.toByteArray());
+        System.out.println("----------------------------------");
         System.out.println("Testo decriptato dal cracker: " +  messaggiochiarocracker);
 
 

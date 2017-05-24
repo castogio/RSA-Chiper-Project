@@ -27,4 +27,10 @@ public class PublicKey {
     public void setE(BigInteger evalue) {
         this.evalue = evalue;
     }
+
+    public String toString(int radix) {
+        return "PUBLIC KEY\n" +
+                "n = " + nvalue.toString(radix) +
+                ",\ne = " + evalue.toString(radix);
+    }
 }

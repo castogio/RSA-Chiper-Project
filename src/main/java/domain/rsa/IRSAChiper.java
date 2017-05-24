@@ -17,7 +17,9 @@ public interface IRSAChiper {
 
     BigInteger decryptBlock(BigInteger chipertex, PrivateKey key);
 
-    KeyBundle attackRSA(PublicKey publicKey);
+    KeyBundle attackWiener(PublicKey publicKey);
+
+    boolean isWienerAttackable(PrivateKey privateKey);
 
 
 }
