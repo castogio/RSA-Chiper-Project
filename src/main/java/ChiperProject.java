@@ -2,6 +2,7 @@ import domain.rsa.projectcustomrsa.RSAChiper;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
 
 import java.math.BigInteger;
+import java.util.Scanner;
 
 /**
  * Created by gioacchino on 24/05/17.
@@ -30,7 +31,7 @@ public class ChiperProject {
         chiper = RSAChiper.getInstance();
 
         // ottenimento della chiave pubblica e privata (generazione casuale)
-        factorbitlenght = 80;
+        factorbitlenght = 512;
         keychain = chiper.getVulnerableKeys(factorbitlenght);
 
         // output delle chiavi
@@ -45,7 +46,8 @@ public class ChiperProject {
         System.out.println("----------------------------------");
 
         // inizializzazione del messaggio da criptare
-        messaggiochiaro = "Ciao Bob!";
+        System.out.print("\n\nTesto da criptare: ");
+        messaggiochiaro = new Scanner(System.in).nextLine();
         msgbytes = new BigInteger(messaggiochiaro.getBytes());
 
         // criptazione del messaggio mediante la chiave pubblica
