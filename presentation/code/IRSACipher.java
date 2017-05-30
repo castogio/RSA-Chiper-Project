@@ -1,4 +1,4 @@
-public interface IRSAChiper {
+public interface IRSACipher {
 
     KeyBundle getWienerAttackableKeys(int factorlength);
 

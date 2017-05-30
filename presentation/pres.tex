@@ -158,14 +158,6 @@
   \end{enumerate}
   
   \end{frame}
-  
-  \begin{frame}
-  \frametitle{What does it teach?}
-    % cosa insegna wiener? importanza di utilizzare una chiave di decrypt grande!
-    \begin{center}
-           \textbf{The decryption exponent has to be the highest possible!}
-    \end{center}
-  \end{frame}
   		
 \section{Java implementation of Wiener-vulnerable RSA}
 
@@ -174,20 +166,27 @@
   \begin{frame}
   \frametitle{What is this project about?}
     % cosa insegna wiener? importanza di utilizzare una chiave di decrypt grande!
-    It simulates a communication between a message sender and a receiver, using \textbf{1024 bit Wiener vulnerable RSA keys}. After that, it attacks the couple [d, n] with the Wiener algorithm, with success (because of the respected conditions).
+    It simulates a communication between a message sender and a receiver, using \textbf{1024 bit Wiener-vulnerable RSA keys} on a single message block. After that, it simulates an attack against the public key with the Wiener algorithm (successful).
   \end{frame}
   
     \begin{frame}
     \frametitle{Project structure}
     
-    The candidate had to implement:
+    The project consists essentially of a packaged RSA library built with:
     
     \begin{itemize}
-    	\item \textbf{IRSAChiper.java}: RSA Cipher interface and implementation;
-    	\item \textbf{BigRational.java}: data structure for represent arbitrary dimension rational numbers (with operations).
+    	\item Custom implemented classes:
+    	\begin{itemize}
+    		\item \textbf{IRSAChiper.java}: RSA Cipher interface and implementation;
+    		\item \textbf{BigRational.java}: data structure for arbitrary dimension rational numbers representation (with operations);
+    		\item \textbf{PublicKey.java} and \textbf{PrivateKey.java}: data structure that contains each part of the keys; 
+    		\item \textbf{KeyBundle.java}: bundle object for RSA keys (utility).
     	\end{itemize}
-    
-    The project widely uses the Java SE class \textbf{BigInteger}, for arbitrary dimension integers (with operations).
+    	\item Default Java 8 SE classes:
+    		\begin{itemize}
+    			\item \textbf{BigInteger.java}: data structure for arbitrary dimension integer numbers representation (with operations like \textit{gcd}, \textit{power}, \textit{modulo}).
+    		\end{itemize}
+    	\end{itemize}
     
     
     
@@ -197,17 +196,33 @@
   
   
 \begin{frame}
-  \frametitle{IRSAChiper.java interface [1/2]}
+  \frametitle{IRSACipher.java interface [1/2]}
     % mostra l'interfaccia IRSAChiper e scrivi praticamente il javadoc
     
     \lstset{basicstyle=\tiny}
-    \lstinputlisting[language=Java]{code/IRSAChiper.java}
+    \lstinputlisting[language=Java]{code/IRSACipher.java}
     
   \end{frame}
   
   \begin{frame}
-  \frametitle{IRSAChiper.java interface [2/2]}
-    %TODO spiega i metodi
+  \frametitle{IRSACipher.java interface [2/2]}
+  
+  Essential method description:
+    
+    \begin{itemize}
+    	\item \textbf{getWienerAttackableKeys}
+    	\begin{itemize}
+    		\item parameter \textit{factorlenght}: it is the bit length of the factors p and q, pseudo-randomly generated and tested by Rabin-Miller algorithm ($q < p < 2q$ checked);
+    		\item it generates the decryption key d forcing it to be such that $bit(d) = bit[\frac{1}{3}{n}^{\frac{1}{4}}] - 1$ (Wiener is compulsorily respected);
+    		\item it returns a \textit{KeyBundle} with the public and private keys of the owner.
+    	\end{itemize}
+    	
+    	\item \textbf{attackWiener}
+    	\begin{itemize}
+    		\item parameter \textit{publicKey}: couple [e, n] to be attacked
+    		\item it returns a \textit{KeyBundle} with the hacked public and private keys .
+    	\end{itemize}
+    \end{itemize}
     
   \end{frame}
   
@@ -222,11 +237,23 @@
   
     \begin{frame}
   \frametitle{BigRational.java [2/2]}
-    %TODO spiega i metodi
+    Essential method description:
+   
+   \begin{itemize}
+   \item \textbf{getListIntegersContinuedFraction}
+   \begin{itemize}
+   		\item It decomposes the rational in $r = a_0 + \frac{1}{x_0} = a_0 + \frac{1}{\frac{1}{x_0}}$;
+   		\item It returns the list of ordered integers that make up the continued fraction expansion of the rational;
+   \end{itemize}
+   \item \textbf{recomposeConvergent} (\textit{static method})
+   \begin{itemize}
+   \item Recompose the passed integer list as a rational (${n}^{th}$ convergent)
+   \end{itemize}
+   \end{itemize}
     
   \end{frame}
   
-  \section*{End of presentation}
+  \section*{}
   
     \begin{frame}
   % \frametitle{End}
