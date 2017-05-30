@@ -9,7 +9,7 @@ import java.math.BigInteger;
 /**
  * Created by gioacchino on 16/05/17.
  */
-public interface IRSAChiper {
+public interface IRSACipher {
 
     /**
      * Genera casualmente delle chiari RSA attaccabili con il Teorema di Wiener

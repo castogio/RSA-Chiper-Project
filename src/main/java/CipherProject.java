@@ -1,4 +1,4 @@
-import domain.rsa.projectcustomrsa.RSAChiper;
+import domain.rsa.projectcustomrsa.RSACipher;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
 
 import java.math.BigInteger;
@@ -7,11 +7,11 @@ import java.util.Scanner;
 /**
  * Created by gioacchino on 24/05/17.
  */
-public class ChiperProject {
+public class CipherProject {
 
     public static void main(String[] args) {
 
-        RSAChiper chiper; // gestiore di RSA (singleton)
+        RSACipher chiper; // gestiore di RSA (singleton)
         KeyBundle keychain; // contenitore per chiave pubblica e privata RSA
         KeyBundle crackerkeychain; // contenitore per le chiavi di un eventuale attaccante
         int factorbitlenght; // lunghezza in bit dei fattori p e q per la generazione delle chiavi
@@ -28,7 +28,7 @@ public class ChiperProject {
 
 
         // inizializzazione del gestore RSA
-        chiper = RSAChiper.getInstance();
+        chiper = RSACipher.getInstance();
 
         // ottenimento della chiave pubblica e privata (generazione casuale)
         factorbitlenght = 512;

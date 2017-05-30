@@ -1,4 +1,4 @@
-import domain.rsa.projectcustomrsa.RSAChiper;
+import domain.rsa.projectcustomrsa.RSACipher;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
 
 import javax.crypto.*;
@@ -67,7 +67,7 @@ public class App {
 
         BigInteger messageint = new BigInteger(message.getBytes());
 
-        RSAChiper c = RSAChiper.getInstance();
+        RSACipher c = RSACipher.getInstance();
 
         KeyBundle kb = c.getWienerAttackableKeys(60);
 

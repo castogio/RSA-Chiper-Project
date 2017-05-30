@@ -1,6 +1,6 @@
 package domain.rsa.projectcustomrsa;
 
-import domain.rsa.IRSAChiper;
+import domain.rsa.IRSACipher;
 import domain.rsa.projectcustomrsa.utils.KeyBundle;
 import domain.rsa.projectcustomrsa.utils.PrivateKey;
 import domain.rsa.projectcustomrsa.utils.PublicKey;
@@ -12,16 +12,16 @@ import java.util.*;
 /**
  * Created by gioacchino on 16/05/17.
  */
-public class RSAChiper implements IRSAChiper {
+public class RSACipher implements IRSACipher {
 
     private final static short FIRST_INTEGER_BIGGER_THAN_SECOND = 1;
 
     // start implementazone singleton
-    private static RSAChiper ourInstance = new RSAChiper();
-    public static RSAChiper getInstance() {
+    private static RSACipher ourInstance = new RSACipher();
+    public static RSACipher getInstance() {
         return ourInstance;
     }
-    private RSAChiper() {}
+    private RSACipher() {}
     // end implementazone singleton
 
     /**
@@ -57,8 +57,8 @@ public class RSAChiper implements IRSAChiper {
             p = BigInteger.probablePrime(factorlength, rnd);
             q = BigInteger.probablePrime(factorlength, rnd);
 
-        } while (!(p.compareTo(q) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
-                q.multiply(BigInteger.valueOf(2)).compareTo(p) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
+        } while (!(p.compareTo(q) == RSACipher.FIRST_INTEGER_BIGGER_THAN_SECOND && // p > q
+                q.multiply(BigInteger.valueOf(2)).compareTo(p) == RSACipher.FIRST_INTEGER_BIGGER_THAN_SECOND)); // 2q > p
 
         // n = pq
         nproduct = p.multiply(q);
@@ -74,7 +74,7 @@ public class RSAChiper implements IRSAChiper {
 
             d = new BigInteger(maxnumbit, rnd);
 
-        } while (d.compareTo(phi) == RSAChiper.FIRST_INTEGER_BIGGER_THAN_SECOND || !d.gcd(phi).equals(BigInteger.ONE));
+        } while (d.compareTo(phi) == RSACipher.FIRST_INTEGER_BIGGER_THAN_SECOND || !d.gcd(phi).equals(BigInteger.ONE));
 
 
         // de = 1 mod phi
