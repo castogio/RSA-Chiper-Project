@@ -73,9 +73,8 @@
     		\end{itemize} 	 
     		\item This pair accomplish multiple function:
     		\begin{itemize}
-    			\item \textbf{encryption}: a sender can use the public key to encrypt the message, while the owner can use the private key decrypt the incoming messages
-    			\item \textbf{authentication}: the public key could be used to verify that a holder of the corresponding private key sent the message (i.e. the owner ``signs" the message)
-    			\item \textbf{message integrity}: related to the latter, because only the owner could encrypt by the his private key
+    			\item \textbf{encryption}: a sender can use the public key to encrypt the message, while the owner can use the private key decrypt the incoming messages;
+    			\item \textbf{authentication}: the public key could be used to verify that a holder of the corresponding private key sent the message (i.e. the owner ``signs" the message).
     		\end{itemize}
     \end{itemize}
   \end{frame}
@@ -140,7 +139,7 @@
     \begin{itemize}
     	\item Given two primes p and q such that $q < p < 2q$;
     	\item Compute $n = p \cdot q$, $\phi(n) = (p-1) \cdot (q-1)$;
-    	\item Given $1 < e,d < \phi(n)$ such that $e \cdot d; \equiv_{\phi(n)} 1$;
+    	\item Given $1 < e,d < \phi(n)$ such that $e \cdot d \equiv_{\phi(n)} 1$;
     	\item If $d < \frac { 1 }{ 3 } { n }^{ \frac { 1 }{ 4 }  }$ then \textbf{d is simply computable}.
     \end{itemize}
     
@@ -151,9 +150,9 @@
   
   \begin{enumerate}
   
-  \item Find the \textbf{i-th convergent} (that we will call $\frac{A_i}{B_i}$) of $\frac { e }{ n }  \in  \mathbb{Q}$;
+  \item Find the \textbf{$i^{th}$ convergent} (that we will call $\frac{A_i}{B_i}$) of $\frac { e }{ n }  \in  \mathbb{Q}$;
   \item If $C = \frac{e \cdot B_i - 1}{A_i} \in \mathbb{Z}$ then is C is a candidate for $\phi(n)$, otherwise return to \textit{step 1};
-  \item If the equation ${x}^{2} - (n - C - 1)x + n = 0$ has integer solution $x_1, x_2$ then $x_1 = p$, $x_2 = q$, otherwise return to \textit{step 1}.
+  \item If the equation ${x}^{2} - (n - C + 1)x + n = 0$ has integer solution $x_1, x_2$ then $x_1 = p$, $x_2 = q$, otherwise return to \textit{step 1}.
   
   \end{enumerate}
   
@@ -166,7 +165,7 @@
   \begin{frame}
   \frametitle{What is this project about?}
     % cosa insegna wiener? importanza di utilizzare una chiave di decrypt grande!
-    It simulates a communication between a message sender and a receiver, using \textbf{1024 bit Wiener-vulnerable RSA keys} on a single message block. After that, it simulates an attack against the public key with the Wiener algorithm (successful).
+    It simulates a communication between a message sender and a receiver, using \textbf{1024 bit Wiener-vulnerable} $n = p \cdot q$ product on a single message block. After that, it simulates an attack against the public key with the Wiener algorithm (successful).
   \end{frame}
   
     \begin{frame}
@@ -242,12 +241,12 @@
    \begin{itemize}
    \item \textbf{getListIntegersContinuedFraction}
    \begin{itemize}
-   		\item It decomposes the rational in $r = a_0 + \frac{1}{x_0} = a_0 + \frac{1}{\frac{1}{x_0}}$;
+   		\item It decomposes the rational in $r = a_0 + r_1 = a_0 + \frac{1}{\frac{1}{r_1}}$;
    		\item It returns the list of ordered integers that make up the continued fraction expansion of the rational;
    \end{itemize}
    \item \textbf{recomposeConvergent} (\textit{static method})
    \begin{itemize}
-   \item Recompose the passed integer list as a rational (${n}^{th}$ convergent)
+   \item Retuns the ${n}^{th}$ convergent from  the passed integer list
    \end{itemize}
    \end{itemize}
     
@@ -259,7 +258,8 @@
   % \frametitle{End}
     % cosa insegna wiener? importanza di utilizzare una chiave di decrypt grande!
     \begin{center}
-           \textbf{Thank you for your attention!}
+           \textbf{Thank you for your attention}\\
+           Let's try it!
     \end{center}
   \end{frame}
 

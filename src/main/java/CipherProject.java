@@ -65,6 +65,7 @@ public class CipherProject {
         System.out.println("\n\nCONFRONTO DEI MESSAGGI");
         System.out.println("----------------------------------");
         System.out.println("Testo chiaro originale: " +  messaggiochiaro);
+        System.out.println("Testo criptato: " +  new String(msgcriptato.toByteArray()));
         System.out.println("Testo decriptato: " +  messaggioricevuto);
         System.out.println("----------------------------------\n\n");
 
