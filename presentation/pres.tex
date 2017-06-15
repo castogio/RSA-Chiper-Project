@@ -178,8 +178,7 @@
     	\begin{itemize}
     		\item \textbf{IRSAChiper.java}: RSA Cipher interface and implementation;
     		\item \textbf{BigRational.java}: data structure for arbitrary dimension rational numbers representation (with operations);
-    		\item \textbf{PublicKey.java} and \textbf{PrivateKey.java}: data structure that contains each part of the keys; 
-    		\item \textbf{KeyBundle.java}: bundle object for RSA keys (utility).
+    		\item \textbf{PublicKey.java} and \textbf{PrivateKey.java}: data structure that contains each part of the keys.
     	\end{itemize}
     	\item Default Java 8 SE classes:
     		\begin{itemize}
@@ -251,6 +250,52 @@
    \end{itemize}
     
   \end{frame}
+  
+  \begin{frame}
+  
+  \frametitle{Workflow [1/3]}
+  
+  \includegraphics[height=3cm, width=12cm]{img/img_chiavi_generate}
+  
+  What does this image show:
+ 	\begin{enumerate}
+ 	\item The systems generates the key cuple and promts it;
+ 	\item It prompts the results of the Wiener vulnerability check;
+ 	\item The system requests the sender to write a message.
+ 	\end{enumerate}
+ 
+  \end{frame}
+  
+    \begin{frame}
+  
+  \frametitle{Workflow [2/3]}
+  
+  \includegraphics[height=2cm, width=12cm]{img/testo_criptato}
+  
+  Let's see these lines:
+ 	\begin{enumerate}
+ 	\item The plain message (not encrypted);
+ 	\item The chiper text (encrypted by the public key);
+ 	\item The result of the decryption (same as the plain message).
+ 	\end{enumerate}
+ 
+  \end{frame}
+  
+    \begin{frame}
+  
+  \frametitle{Workflow [2/3]}
+  
+  \includegraphics[height=2cm, width=12cm]{img/attacco}
+  
+  What has Eveline managed to do?
+ 	\begin{enumerate}
+ 	\item She has obtained the (p, q) cuple;
+ 	\item She has computed the \textbf{decription exponent} easely ($e \cdot d \equiv_{\phi(n)} 1$)!
+ 	\item She has decrypted the whole message!
+ 	\end{enumerate}
+ 
+  \end{frame}
+ 
   
   \section*{}
   
