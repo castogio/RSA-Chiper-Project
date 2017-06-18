@@ -63,7 +63,7 @@
   
   
   \begin{frame}
-    \frametitle{Public-key (asymmetric) cryptography}
+    \frametitle{RSA is a public-key (asymmetric) cryptosystem}
     % RSA è un metodo a chiave pubblica - chiave privata
     \begin{itemize}
     		\item The one who wants to receive encrypted messages \textbf{generates one pair of keys}: 
@@ -74,8 +74,14 @@
     		\item This pair accomplish multiple function:
     		\begin{itemize}
     			\item \textbf{encryption}: a sender can use the public key to encrypt the message, while the owner can use the private key decrypt the incoming messages;
-    			\item \textbf{authentication}: the public key could be used to verify that a holder of the corresponding private key sent the message (i.e. the owner ``signs" the message).
+    			\item \textbf{authentication}: the public key could be used to verify that a holder of the corresponding private key has sent the message (i.e. the owner has ``signed" the message).
     		\end{itemize}
+    		
+    		\begin{center}
+    		 \includegraphics[height=2cm, width=10cm]{img/ciclo_criptazione}
+    		\end{center}
+    		 
+    		
     \end{itemize}
   \end{frame}
   
